@@ -55,7 +55,7 @@
 #define is_selinux_enabled() file_exists("/sys/fs/selinux")
 
 struct c_vol {
-	const container_t *container;
+	container_t *container;
 };
 
 /******************************************************************************/
@@ -776,7 +776,7 @@ c_vol_fixup_logdev()
 /******************************************************************************/
 
 c_vol_t *
-c_vol_new(const container_t *container)
+c_vol_new(container_t *container)
 {
 	ASSERT(container);
 
@@ -808,6 +808,9 @@ c_vol_start_child(c_vol_t *vol)
 		ERROR_ERRNO("Cound not mkdir container directory %s", container_get_images_dir(vol->container));
 		goto error;
 	}
+	// if we started the container for the first time, we store its creation time
+	if (errno != EEXIST)
+		container_set_creation_time(vol->container);
 
 	if (mkdir("/tmp", 0700) < 0 && errno != EEXIST) {
 		ERROR_ERRNO("Could not mkdir /tmp dir for container start");

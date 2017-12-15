@@ -42,7 +42,7 @@ typedef struct c_vol c_vol_t;
  * container-specific images (e.g. data and cache) are or should be stored.
  */
 c_vol_t *
-c_vol_new(const container_t *container);
+c_vol_new(container_t *container);
 
 void
 c_vol_free(c_vol_t *vol);

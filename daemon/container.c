@@ -161,6 +161,7 @@ struct container {
 
 	char *dns_server;
 	time_t time_started;
+	time_t time_created;
 };
 
 struct container_callback {
@@ -328,6 +329,7 @@ container_new_internal(
 	container->dns_server = dns_server ? mem_strdup(dns_server) : NULL;
 
 	container->time_started = -1;
+	container->time_created = -1;
 
 	return container;
 
@@ -2124,4 +2126,16 @@ container_get_uptime(const container_t *container)
 {
 	time_t uptime = time(NULL) - container->time_started;
 	return (uptime < 0) ? 0 : uptime;
+}
+
+void
+container_set_creation_time(container_t *container)
+{
+	container->time_created = time(NULL);
+}
+
+time_t
+container_get_creation_time(const container_t *container)
+{
+	return (container->time_created < 0) ? 0: container->time_created;
 }
